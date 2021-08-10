@@ -1,0 +1,33 @@
+body {
+ display:flex;
+
+ align-items: center;
+ justify-content: center;
+ height: 100vh;
+ width: 100vw;
+}
+div {
+    border: 2px solid blue;
+}
+#buchanlage {
+height: 50vh;
+width: 20vw;
+display: flex;
+flex-flow: column;
+align-items: center;
+justify-content:space-between;
+
+}
+#buchanzeige {
+height: 50vh;
+width: 40vw;
+}
+
+#tableBooks {
+    width: 100%;
+    height: 100%;
+    display: table;
+}
+#tableHeader{
+    display:table-cell;
+}
