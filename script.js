@@ -74,10 +74,12 @@ btnAnlage.addEventListener("click", function(e) {
 })
 
 function Books (title, author, pages, read) {
+    this.index = myLibrary.length + 1;
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.read = read;
+    
     
 }
 
@@ -87,20 +89,18 @@ Books.prototype.info = function () {
 
 let myLibrary = [];
 
-function storeBook (title, author, pages, read) {
+function storeBook (title, author, pages, read) { /* Zur Anlage eines neuen Buches, wenn auf "Neues Buch anlegen, geklickt wird." */
     myLibrary.push(new Books(title,author,pages,read));
     const tableBooks = document.querySelector("#tableBooks");
-    let buffer = [myLibrary[myLibrary.length-1]];
+    let buffer = [myLibrary[myLibrary.length-1]];  /* Erstellt einen Buffer Array, da generateTable nur mit iterierbaren Objekten funktioniert */
     console.log(buffer);
     generateTable(tableBooks,buffer) 
 
 }
 
-function returnBooks () {
-    myLibrary.forEach(book => console.log(book.info()));
-}
 
-function checkforRequiredInput (title, author, pages) {
+
+function checkforRequiredInput (title, author, pages) { /* Überprüft ob alle Felder gefüllt sind, bevor ein neues Buch angelegt wird */
     let error ="";
     
     if (title == "") {
@@ -121,7 +121,7 @@ function checkforRequiredInput (title, author, pages) {
     }
 }
 
-function drawTable () {
+function drawTable () { /* Zur Erstellung der Tabellenstruktur und des Inhaltes bei der ersten Initialisierung */
     const tableBooks = document.createElement("table");
     const outputBooks = document.querySelector("#buchanzeige");
     tableBooks.id = "tableBooks";
@@ -132,35 +132,37 @@ function drawTable () {
 
 }
 
-function generateTableHead (table, data) {
+function generateTableHead (table, data) { /* Zur Erstellung des Table Headers. Iteriert die einzelnen Propperties der Klasse und fügt diese als Kopfzeile hinzu */
     let thead = table.createTHead();
     let row = thead.insertRow();
     for (let key of data) {
         let th = document.createElement("th");
         let text = document.createTextNode(key);
-        th.id="tableHeader";
+        th.classList.add("tableHeader");
         th.appendChild(text);
         row.appendChild(th);
         
     }
 }
 
-function generateTable (table, data) {
+function generateTable (table, data) { /* Zur Füllen der Tabelle mit den Büchern aus myLibrary */
     console.log(data);
     
     for (let element of data) {
         let row = table.insertRow();
         for (let key in element) {
-            if (typeof element[key] != "function" && typeof element[key] != "boolean") {
+            if (typeof element[key] != "function" && typeof element[key] != "boolean") { /* Ignoriert Funktionen innerhalb des Objekts */
                 let cell = row.insertCell();
-                cell.id="tableCell"
+                cell.classList.add("tableCell");
                 let text = document.createTextNode(element[key])
                 cell.appendChild(text);
             }
             else if (typeof element[key] == "boolean") {
                 let cell = row.insertCell();
                 let box = document.createElement("input")
-                cell.id="tableCell"
+                cell.classList.add("tableCell");
+                box.id=`btn${element.index}`;
+                box.classList.add ("boxread");
                 box.type="checkbox";
                 if (element[key] == true) {
                     box.checked = true;
@@ -172,8 +174,23 @@ function generateTable (table, data) {
         
     }
 }
+for (let index = 0; index < 15; index++) {
+    myLibrary.push(new Books("Test","Test","123",false));
+    
+}
 
 
-myLibrary.push(new Books("Test","Test","123",false));
 drawTable();
-
+const chkReads = document.querySelectorAll(".boxread");
+chkReads.forEach(chkRead => chkRead.addEventListener("change", function (e) {
+console.log(e.currentTarget.checked);
+console.log(e.currentTarget.id);
+let index = e.currentTarget.id.substring(3);
+if (e.currentTarget.checked == true) {
+    myLibrary[index -1].read = true;
+}
+else {
+    myLibrary[index -1].read = false;
+}
+}
+))
