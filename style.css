@@ -1,13 +1,49 @@
+* {
+font-family:monospace ;
+}
+
 body {
  display:flex;
 
  align-items: center;
  justify-content: center;
+
  height: 100vh;
  width: 100vw;
+ background-color: #e8f5e9;
 }
 div {
-    border: 2px solid blue;
+    margin: 0px;
+    padding: 0px;
+}
+.buttondelete {
+background-color: #f5f0e8;
+border-radius: 0%;
+border: none;
+}
+#btnAnlage {
+    background-color: f5f0e8;
+    border: none;;
+}
+
+#buchanlage > div {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-flow: column;
+}
+#divchkRead {
+    text-align: center !important;
+}
+.inputBuch {
+    border-color: white;
+    border-radius: 3%;
+    border-style: solid;
+}
+
+.tableCell {
+    display: table-cell;
+    text-align: center;
 }
 #buchanlage {
 height: 50vh;
@@ -16,11 +52,15 @@ display: flex;
 flex-flow: column;
 align-items: center;
 justify-content:space-between;
+background-color: #e8f5f0;
+border: #e8f5f0 solid 1px;
+border-radius: 3%;
 
 }
 #buchanzeige {
 height: 50vh;
 width: 40vw;
+background-color: #e8f4f5;
 }
 
 #tableBooks {
@@ -28,6 +68,6 @@ width: 40vw;
     height: 100%;
     display: table;
 }
-#tableHeader{
+.tableHeader{
     display:table-cell;
 }

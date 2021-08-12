@@ -13,7 +13,7 @@ const buchanlageInputs = [ /* Wird genutzt für den Aufbau der Inputs für die N
     },
     {
         type:"text",
-        label:"Seitenanzahl",
+        label:"Seiten",
         id:"txtPages",
     },
     {
@@ -39,6 +39,7 @@ buchanlageInputs.forEach(input => {
         const inputElements  = document.createElement("input")
         inputElementsDiv.id = `div${input.id}`
         inputElementsDiv.innerHTML=input.label;
+        inputElements.classList.add("inputBuch")
         inputElements.type = input.type;
         inputElements.id = input.id;
         buchAnlageDiv.appendChild(inputElementsDiv);
