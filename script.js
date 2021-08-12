@@ -1,3 +1,5 @@
+let bookIndex = 1; /* Wird für den Index der BÜCHER genutzt! Nicht für den Index des Arrays myLibrary */
+
 const buchanlageInputs = [ /* Wird genutzt für den Aufbau der Inputs für die Neuanlage eines Buches */
     {
         type:"text",
@@ -53,7 +55,9 @@ buchanlageInputs.forEach(input => {
 /* Wird genutzt für den Aufbau der Inputs für die Neuanlage eines Buches */
 
 const btnAnlage = document.querySelector("#btnAnlage")
-btnAnlage.addEventListener("click", function(e) {
+btnAnlage.addEventListener("click", createNewBook)
+
+function createNewBook(e) {
     const inputTitle = document.querySelector("#txtTitle");
     const inputAuthor = document.querySelector("#txtAuthor");
     const inputPages = document.querySelector("#txtPages");
@@ -71,10 +75,10 @@ btnAnlage.addEventListener("click", function(e) {
     else {
         window.alert(`Es fehlen folgende Angaben:${check}`)
     }
-})
+}
 
 function Books (title, author, pages, read) {
-    this.index = myLibrary.length + 1;
+    this.index = bookIndex;
     this.title = title;
     this.author = author;
     this.pages = pages;
@@ -87,10 +91,13 @@ Books.prototype.info = function () {
     return `Der Titel des Buches ist ${this.title}, Es wurde geschrieben von ${this.author} und hat ${this.pages} Seiten. Aktuell hast Du das Buch ${this.read}.`;
 }
 
+
+
 let myLibrary = [];
 
 function storeBook (title, author, pages, read) { /* Zur Anlage eines neuen Buches, wenn auf "Neues Buch anlegen, geklickt wird." */
     myLibrary.push(new Books(title,author,pages,read));
+    bookIndex++;
     const tableBooks = document.querySelector("#tableBooks");
     let buffer = [myLibrary[myLibrary.length-1]];  /* Erstellt einen Buffer Array, da generateTable nur mit iterierbaren Objekten funktioniert */
     console.log(buffer);
@@ -151,46 +158,68 @@ function generateTable (table, data) { /* Zur Füllen der Tabelle mit den Büche
     for (let element of data) {
         let row = table.insertRow();
         for (let key in element) {
-            if (typeof element[key] != "function" && typeof element[key] != "boolean") { /* Ignoriert Funktionen innerhalb des Objekts */
+            if (typeof element[key] != "function" && typeof element[key] != "boolean") { /* Ignoriert Funktionen innerhalb des Objekts und Properties des Typs bool */
                 let cell = row.insertCell();
                 cell.classList.add("tableCell");
                 let text = document.createTextNode(element[key])
                 cell.appendChild(text);
             }
-            else if (typeof element[key] == "boolean") {
+            else if (typeof element[key] == "boolean") { /* Properties vom Typ Bool werden als Checkbox ausgegeben*/
                 let cell = row.insertCell();
                 let box = document.createElement("input")
                 cell.classList.add("tableCell");
-                box.id=`btn${element.index}`;
+                box.id=`box${element.index}`;
                 box.classList.add ("boxread");
                 box.type="checkbox";
-                if (element[key] == true) {
+                if (element[key] == true) {  /*Vorbelegung der Checkbox anhand des Values im Objekt */
                     box.checked = true;
                 }
                 cell.appendChild(box);
+                
             }
             
         }
+        let cell = row.insertCell(); /* Fügt in jeder Spalte einen Löschenbutton hinzu */ 
+        cell.classList.add("tableCell");
+        let button = document.createElement("button");
+        button.classList.add("buttondelete");
+        button.id = `btn${element.index}`;
+        button.textContent = "Löschen";
+        cell.appendChild(button);
         
     }
 }
-for (let index = 0; index < 15; index++) {
-    myLibrary.push(new Books("Test","Test","123",false));
+for (let index = 0; index < 15; index++) { /*Dummy-Bücher */
+    myLibrary.push(new Books(`Test${index}`,"Test","123",false));
+    bookIndex++;
     
 }
 
 
 drawTable();
+
 const chkReads = document.querySelectorAll(".boxread");
 chkReads.forEach(chkRead => chkRead.addEventListener("change", function (e) {
-console.log(e.currentTarget.checked);
-console.log(e.currentTarget.id);
-let index = e.currentTarget.id.substring(3);
+let index = e.currentTarget.id.substring(3); /**
+ * Sucht anhand des Indexes des BUCHES den Index im Array myLibrary. Nötig da das Löschen eines Buches den Index im Array ändert, aber nicht den Index des Buches.
+ */
+let changeIndex = myLibrary.findIndex(buch => buch.index == index);
+
 if (e.currentTarget.checked == true) {
-    myLibrary[index -1].read = true;
+    myLibrary[changeIndex].read = true;
 }
 else {
-    myLibrary[index -1].read = false;
+    myLibrary[changeIndex].read = false;
 }
 }
 ))
+
+const deleteBooks = document.querySelectorAll(".buttondelete");
+deleteBooks.forEach (deleteBook => deleteBook.addEventListener("click", function(e){
+    console.log(e.currentTarget.id);
+    console.log(myLibrary.length)
+    myLibrary.splice(e.currentTarget.id.substring(3)-1,1); 
+    console.log(deleteBook.parentElement.parentElement.hasChildNodes());
+    deleteBook.parentNode.parentNode.remove();
+
+} ))
