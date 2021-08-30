@@ -78,15 +78,17 @@ function createNewBook(e) {
     }
 }
 
-function Books (title, author, pages, read) {
+class Books {
+constructor(title, author, pages, read){
     this.index = bookIndex;
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.read = read;
-    
+}
     
 }
+
 
 Books.prototype.info = function () {
     return `Der Titel des Buches ist ${this.title}, Es wurde geschrieben von ${this.author} und hat ${this.pages} Seiten. Aktuell hast Du das Buch ${this.read}.`;
